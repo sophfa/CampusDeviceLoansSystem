@@ -29,6 +29,8 @@ export type RepositoryResult<T> =
  * without any implementation details, keeping it pure domain-focused.
  */
 export interface ProductRepo {
+
+  list(): Promise<RepositoryResult<Product[]>>  
   /**
    * Persists a product to the repository
    *

@@ -62,6 +62,19 @@ export class CosmosProductRepo implements ProductRepo {
       .container(options.containerId);
   }
 
+  async list(): Promise<RepositoryResult<Product[]>> {
+  try {
+    const query = 'SELECT * FROM c'
+    const { resources } = await this.container.items.query<ProductDocument>(query).fetchAll()
+
+    const products = resources.map(doc => this.toDomain(doc))
+    return { success: true, data: products }
+  } catch (error: any) {
+    return { success: false, error: this.mapCosmosError(error) }
+  }
+}
+
+
   /**
    * Converts domain Product to Cosmos DB document format
    */
