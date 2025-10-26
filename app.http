@@ -1,0 +1,106 @@
+### Azure Functions Product API Testing
+
+# Base URL for local development
+@baseUrl = http://localhost:7071
+
+### Health Check (if available)
+GET {{baseUrl}}/api/health
+
+### List all products
+GET {{baseUrl}}/api/products
+Content-Type: application/json
+
+### Get a specific product by ID
+GET {{baseUrl}}/api/products/PROD-001
+Content-Type: application/json
+
+### Create a new product
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "id": "PROD-001",
+  "name": "Wireless Headphones",
+  "price": 99.99,
+  "category": "Electronics",
+  "description": "High-quality wireless headphones with noise cancellation",
+  "inStock": true
+}
+
+### Create another product
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "id": "PROD-002",
+  "name": "Gaming Mouse",
+  "price": 49.99,
+  "category": "Electronics",
+  "description": "RGB gaming mouse with high precision sensor",
+  "inStock": true
+}
+
+### Create a product with minimal fields
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "id": "PROD-003",
+  "name": "USB Cable",
+  "price": 9.99,
+  "category": "Accessories"
+}
+
+### Test validation - missing required field (name)
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "id": "PROD-004",
+  "price": 19.99,
+  "category": "Accessories"
+}
+
+### Test validation - invalid price (negative)
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "id": "PROD-005",
+  "name": "Invalid Product",
+  "price": -10.00,
+  "category": "Test"
+}
+
+### Test validation - empty name
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "id": "PROD-006",
+  "name": "",
+  "price": 25.00,
+  "category": "Test"
+}
+
+### Test duplicate ID
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "id": "PROD-001",
+  "name": "Duplicate Product",
+  "price": 50.00,
+  "category": "Test"
+}
+
+### Test get non-existent product
+GET {{baseUrl}}/api/products/NON-EXISTENT
+Content-Type: application/json
+
+### Test with different environments
+### Production (uncomment when needed)
+# @baseUrl = https://your-function-app.azurewebsites.net
+
+### Staging (uncomment when needed)  
+# @baseUrl = https://your-function-app-staging.azurewebsites.net
