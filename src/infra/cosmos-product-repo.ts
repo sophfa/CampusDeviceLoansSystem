@@ -25,16 +25,24 @@ export interface CosmosProductRepoOptions {
 interface ProductDocument {
   readonly id: string;
   readonly name: string;
-  readonly price: number;
+  readonly brand: string;
   readonly category: string;
+  readonly model: string;
+  readonly processor: string;
+  readonly ram: string;
+  readonly storage: string;
+  readonly gpu: string;
+  readonly display: string;
+  readonly os: string;
+  readonly batteryLife: string;
+  readonly weight: string;
+  readonly ports: string[];
+  readonly connectivity: string[];
   readonly description?: string;
+  readonly imageUrl?: string;
+  readonly price: number;
   readonly inStock: boolean;
-  readonly createdAt: string; // ISO string for JSON serialization
-  readonly _rid?: string; // Cosmos DB system property
-  readonly _self?: string; // Cosmos DB system property
-  readonly _etag?: string; // Cosmos DB system property
-  readonly _attachments?: string; // Cosmos DB system property
-  readonly _ts?: number; // Cosmos DB system property
+  readonly createdAt: Date;
 }
 
 /**
@@ -63,17 +71,18 @@ export class CosmosProductRepo implements ProductRepo {
   }
 
   async list(): Promise<RepositoryResult<Product[]>> {
-  try {
-    const query = 'SELECT * FROM c'
-    const { resources } = await this.container.items.query<ProductDocument>(query).fetchAll()
+    try {
+      const query = 'SELECT * FROM c';
+      const { resources } = await this.container.items
+        .query<ProductDocument>(query)
+        .fetchAll();
 
-    const products = resources.map(doc => this.toDomain(doc))
-    return { success: true, data: products }
-  } catch (error: any) {
-    return { success: false, error: this.mapCosmosError(error) }
+      const products = resources.map((doc) => this.toDomain(doc));
+      return { success: true, data: products };
+    } catch (error: any) {
+      return { success: false, error: this.mapCosmosError(error) };
+    }
   }
-}
-
 
   /**
    * Converts domain Product to Cosmos DB document format
@@ -82,11 +91,24 @@ export class CosmosProductRepo implements ProductRepo {
     return {
       id: product.id,
       name: product.name,
-      price: product.price,
+      brand: product.brand,
       category: product.category,
+      model: product.model,
+      processor: product.processor,
+      ram: product.ram,
+      storage: product.storage,
+      gpu: product.gpu,
+      display: product.display,
+      os: product.os,
+      batteryLife: product.batteryLife,
+      weight: product.weight,
+      ports: product.ports,
+      connectivity: product.connectivity,
       description: product.description,
+      imageUrl: product.imageUrl,
+      price: product.price,
       inStock: product.inStock,
-      createdAt: product.createdAt.toISOString(),
+      createdAt: product.createdAt,
     };
   }
 
@@ -97,9 +119,22 @@ export class CosmosProductRepo implements ProductRepo {
     return {
       id: document.id,
       name: document.name,
-      price: document.price,
+      brand: document.brand,
       category: document.category,
+      model: document.model,
+      processor: document.processor,
+      ram: document.ram,
+      storage: document.storage,
+      gpu: document.gpu,
+      display: document.display,
+      os: document.os,
+      batteryLife: document.batteryLife,
+      weight: document.weight,
+      ports: document.ports,
+      connectivity: document.connectivity,
       description: document.description,
+      imageUrl: document.imageUrl,
+      price: document.price,
       inStock: document.inStock,
       createdAt: new Date(document.createdAt),
     };

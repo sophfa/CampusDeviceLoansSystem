@@ -50,45 +50,51 @@ export async function listProductsHttp(
 ): Promise<HttpResponseInit> {
   context.log('HTTP trigger function processed a request to list products');
 
-try {
-  const result = await productRepo.list()
+  try {
+    const result = await productRepo.list();
 
-  if (!result.success || !result.data) {
-    throw new Error(result.error?.message || 'Failed to fetch products')
-  }
+    if (!result.success) {
+      throw new Error(
+        (result as any).error?.message || 'Failed to fetch products'
+      );
+    }
 
-  const response: ListProductsResponse = {
-    success: true,
-    data: result.data,
-    metadata: {
-      count: result.data.length,
-      timestamp: new Date().toISOString(),
-    },
-  }
+    if (!result.data) {
+      throw new Error('No data returned from repository');
+    }
 
-  return {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/json',
-      'Cache-Control': 'no-cache',
-    },
-    body: JSON.stringify(response, null, 2),
+    const response: ListProductsResponse = {
+      success: true,
+      data: result.data,
+      metadata: {
+        count: result.data.length,
+        timestamp: new Date().toISOString(),
+      },
+    };
+
+    return {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
+      },
+      body: JSON.stringify(response, null, 2),
+    };
+  } catch (error: any) {
+    context.log('Error listing products:', error);
+    const errorResponse: ListProductsResponse = {
+      success: false,
+      error: {
+        code: 'INTERNAL_ERROR',
+        message: 'An unexpected error occurred while listing products',
+      },
+    };
+    return {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(errorResponse, null, 2),
+    };
   }
-} catch (error: any) {
-  context.log('Error listing products:', error)
-  const errorResponse: ListProductsResponse = {
-    success: false,
-    error: {
-      code: 'INTERNAL_ERROR',
-      message: 'An unexpected error occurred while listing products',
-    },
-  }
-  return {
-    status: 500,
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(errorResponse, null, 2),
-  }
-}
 }
 
 // Register the function with Azure Functions runtime

@@ -1,6 +1,5 @@
 import { CosmosClient } from '@azure/cosmos';
-import 'dotenv/config'
-
+import 'dotenv/config';
 
 const endpoint = process.env.COSMOS_ENDPOINT!;
 const key = process.env.COSMOS_KEY!;
@@ -106,9 +105,18 @@ const products = [
 
 async function seed() {
   const container = client.database(databaseId).container(containerId);
+
+  await container.items
+    .query('SELECT * FROM c')
+    .fetchAll()
+    .then(async (res) => {
+      for (const item of res.resources) {
+        await container.item(item.id, item.id).delete();
+      }
+    });
+
   for (const product of products) {
     const { resource } = await container.items.create(product);
-    console.log(`✅ Inserted ${resource.name}`);
   }
 }
 

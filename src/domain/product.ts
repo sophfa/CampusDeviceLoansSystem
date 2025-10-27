@@ -6,9 +6,22 @@
 export interface Product {
   readonly id: string;
   readonly name: string;
-  readonly price: number;
+  readonly brand: string;
   readonly category: string;
+  readonly model: string;
+  readonly processor: string;
+  readonly ram: string;
+  readonly storage: string;
+  readonly gpu: string;
+  readonly display: string;
+  readonly os: string;
+  readonly batteryLife: string;
+  readonly weight: string;
+  readonly ports: string[];
+  readonly connectivity: string[];
   readonly description?: string;
+  readonly imageUrl?: string;
+  readonly price: number;
   readonly inStock: boolean;
   readonly createdAt: Date;
 }
@@ -19,10 +32,24 @@ export interface Product {
 export interface CreateProductParams {
   readonly id: string;
   readonly name: string;
-  readonly price: number;
+  readonly brand: string;
   readonly category: string;
+  readonly model: string;
+  readonly processor: string;
+  readonly ram: string;
+  readonly storage: string;
+  readonly gpu: string;
+  readonly display: string;
+  readonly os: string;
+  readonly batteryLife: string;
+  readonly weight: string;
+  readonly ports: string[];
+  readonly connectivity: string[];
   readonly description?: string;
-  readonly inStock?: boolean;
+  readonly imageUrl?: string;
+  readonly price: number;
+  readonly inStock: boolean;
+  readonly createdAt: Date;
 }
 
 /**
@@ -166,11 +193,24 @@ export const createProduct = (
   const product: Product = {
     id: params.id.trim(),
     name: params.name.trim(),
-    price: params.price,
+    brand: params.brand.trim(),
     category: params.category.trim(),
+    model: params.model.trim(),
+    processor: params.processor.trim(),
+    ram: params.ram.trim(),
+    storage: params.storage.trim(),
+    gpu: params.gpu.trim(),
+    display: params.display.trim(),
+    os: params.os.trim(),
+    batteryLife: params.batteryLife.trim(),
+    weight: params.weight.trim(),
+    ports: [...params.ports],
+    connectivity: [...params.connectivity],
     description: params.description?.trim(),
-    inStock: params.inStock ?? true,
-    createdAt: new Date(),
+    imageUrl: params.imageUrl?.trim(),
+    price: params.price,
+    inStock: params.inStock,
+    createdAt: params.createdAt,
   };
 
   return { success: true, product };
