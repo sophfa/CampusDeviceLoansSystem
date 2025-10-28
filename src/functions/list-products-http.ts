@@ -13,8 +13,9 @@ import { CosmosProductRepo } from '../infra/cosmos-product-repo';
 // Configuration from environment variables
 const cosmosOptions = {
   endpoint: process.env.COSMOS_ENDPOINT || 'https://localhost:8081',
-  databaseId: process.env.COSMOS_DATABASE || 'ProductsDB',
-  containerId: process.env.COSMOS_CONTAINER || 'Products',
+  databaseId: process.env.COSMOS_DATABASE || 'catalogue-db',
+  containerId: process.env.COSMOS_CONTAINER || 'Devices',
+
   key: process.env.COSMOS_KEY,
 };
 
